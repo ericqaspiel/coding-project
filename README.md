@@ -1,5 +1,2 @@
-a = 5
-print(a)
-asdfafdadf testest
-okokokokokfdf
-fetsting 1234
+Welcome To Coding Final Project.
+Hope you have a great time
