@@ -29,8 +29,6 @@ while main_menu:
                                         courses.write(f"Course ID: {add_id}\nCourse Name: {add_name}\nMaximum Seats: {max_seat}\n")
                                         print("Course Added Successfully!")
                                         print("==========================")
-                        case 3:
-                                with open("enrollments.txt","a") as enrollments:
 
                         case 7:
                                 print("Exiting The Program. SEE YOU AGAIN!")
