@@ -1,30 +1,89 @@
+def add_student():
+    # Getting input from user for student ID & student name
+    try:
+        sid = int(input("Student ID: ").strip())
+    except ValueError:
+        print("Please enter valid number for Student ID.")
+        return
+    sname = input("Student Name: ").strip()
+
+    # getting input from user for contact information and if user enter anything beside integer then will show error
+    try:
+        contact_info = input("Contact Information: ").strip()
+        for c in contact_info:
+            int(c)
+    except ValueError:
+        print("Please enter a valid number for Contact Information.")
+        return
+
+    try:
+        with open("student.txt", "r") as students_file:
+            for line in students_file:
+                if sid == int(line.strip().split(",")[0]):
+                    print("Students ID Is Already Existed")
+                    return
+    except FileNotFoundError:
+        print("New file for student has created!")
+
+    with open("student.txt", "a") as students_file:
+        students_file.write(f"{sid},{sname},{contact_info}\n")
+        print("Student Added successfully!")
+
+
 def add_course():
-    # Getting input from user for course ID & course name
+    # Getting input from user for course id & course name
     cid = input("Course ID: ").strip()
     cname = input("Course name: ").strip()
 
-    # Getting input from user for max seats, ensuring input is an integer
+    # Getting input from user for max seats and if user enter anything beside integer then will show error
     try:
         max_seats = int(input("Max seats: ").strip())
     except ValueError:
         print("Please enter a valid number for seats.")
         return
 
-    # Checking if course exists in the file
+    # This to check if courses existed and file not created.
     try:
-        with open('course.txt', 'r') as courses:
-            for line in courses:
-                c_id, c_name, c_seats = line.strip().split(",")  # Split line by comma
-                if c_id == cid:  # Compare input ID with stored ID
-                    print("Course Is Already Existed!")
+        with open("course.txt", "r") as course_file:
+            for line in course_file:
+                cid_2 = line.strip().split(",")[0]
+                if cid == cid_2:
+                    print("Course already exist!")
                     return
     except FileNotFoundError:
-        print("New file for course created!")
+        print("New file for course has created!")
+    # this is check if file not created/found, tell the user new file created
 
-    # Append the new course to the file
-    with open('course.txt', 'a') as courses:
-		courses.write("{cid},{cname},{max_seats}")
+    # This to append the information from user to the file
+    with open("course.txt", "a") as course_file:
+        course_file.write(f"{cid},{cname},{max_seats}\n")
         print("Course added successfully!")
+
+
+def view_courses():
+    try:
+        with open("course.txt", "r") as courses:
+            course_list = courses.readlines()
+
+        for line in course_list:
+            cid, cname, max_seats = line.strip().split(",")
+            print(f"Course ID: {cid} | Course Name: {cname} | Max Seats: {max_seats}")
+
+    except FileNotFoundError:
+        print("No available course now.")
+
+
+def view_students():
+    try:
+        with open("student.txt", "r") as students:
+            students_list = students.readlines()
+        for line in students_list:
+            sid, sname, contact_info = line.strip().split(",")
+            print(f"Student ID: {sid} | Student Name: {sname} | Contact Information: {contact_info}")
+
+    except FileNotFoundError:
+        print("No existing student now.")
+
 
 while True:
     print("=============================================")
@@ -45,6 +104,8 @@ while True:
             add_course()
         case 5:
             view_courses()
+        case 6:
+            view_students()
         case 7:
             print("Exiting The Program. SEE YOU AGAIN!")
             break
