@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 def add_student():
     # Getting input from user for student ID if is not digit will print error
     sid = input("Student ID: ").strip()
@@ -12,7 +15,7 @@ def add_student():
         return
 
     # getting input from user for contact information and if user enter anything beside integer then will show error
-    contact_info = input("Contact Information: ").strip()
+    contact_info = input("Phone number: ").strip()
     if not contact_info.isdigit():
         print("Please enter a valid number for Contact Information.")
         return
@@ -31,7 +34,7 @@ def add_student():
     with open("student.txt", "a") as students_file:
         students_file.write(f"{sid},{sname},{contact_info}\n")
         print()
-        print(f"(Student ID: {sid}) (Student Name: {sname}) added successfully!\n")
+        print(f"Student ID: {sid} | Student Name: {sname} added successfully!\n")
 
 
 def add_course():
@@ -66,7 +69,181 @@ def add_course():
     with open("course.txt", "a") as course_file:
         course_file.write(f"{cid},{cname},{max_seats}\n")
         print()
-        print(f"(Course ID:{cid}) (Course Name:{cname}) (Max Seats:{max_seats}) added successfully!\n")
+        print(f"(Course ID: {cid}) (Course Name: {cname}) (Max Seats: {max_seats}) added successfully!\n")
+
+
+# def enrol_course():
+#     student_exists = 1
+#     course_exists = 1
+#     enrollment_exists = 1
+
+#     sid = input("Enter student ID to enrol: ")
+#     if not sid.isdigit():
+#         print("Please enter the valid number for student ID: ")
+#         return
+
+#     cid = input("Enter student course ID to enrol: ")
+#     if not cid:
+#         print("Please enter valid course ID: ")
+#         return
+
+#     with open("student.txt", "r") as student_file:
+#         for line in student_file:
+#             if sid == line.strip().split(",")[0]:
+#                 student_exists = 2
+#                 break
+#             else:
+#                 print("Student Does not exist.")
+
+#     if student_exists == 2:
+#         with open("course.txt", "r") as course_file:
+#             for line in course_file:
+#                 if cid == line.strip().split(",")[0]:
+#                     course_exists = 2
+#                     break
+#                 else:
+#                     print("Course doesnt exist.")
+
+#     if course_exists == 2:
+#         with open("enrollments.txt", "r") as enrollment_file:
+#             for line in enrollment_file:
+#                 if sid == line.strip().split(",")[0] and cid == line.strip().split(",")[1]:
+#                     enrollment_exists = 2
+#                     print("Student Already Enrolled")
+#                     break
+
+#     if student_exists == 2 and course_exists == 2 and enrollment_exists == 1:
+#         with open("enrollments.txt", "a") as enrollment_file:
+#             enrollment_file.write(f"{sid},{cid}\n")
+#             print(f"(Student ID:{sid}) (Course Id:{cid}) Enrolled Successfully!\n")
+
+
+# def enrol_course():
+#     sid = input("Enter student ID to enrol: ").strip()
+#     if not sid.isdigit():
+#         print("Please enter the valid number for student ID")
+#         return
+
+#     cid = input("Enter student course ID to enrol: ").strip()
+#     if not cid:
+#         print("Please enter valid course ID")
+#         return
+
+#     student_found = False
+#     course_found = False
+
+#     with open("student.txt", "r") as student_file:
+#         for line in student_file:
+#             if sid == line.strip().split(",")[0]:
+#                 student_found = sid
+#             else:
+#                 print("Student is not registered")
+
+#     with open("course.txt", "r") as course_file:
+#         for line in course_file:
+#             if cid == line.strip().split(",")[0]:
+#                 course_found = True
+#             else:
+#                 print("Course is not available")
+
+#     if student_found == True and course_found == True:
+#         with open("enrollments.txt", "a") as enrollment_file:
+#             enrollment_file.write(f"{sid},{cid}\n")
+#             print(f"Student ID: {sid} has succesfully enrolled in course ID: {cid}\n")
+
+
+def enrol_course():
+    sid = input("Enter student ID to enrol: ").strip()
+    if not sid.isdigit():
+        print("Please enter the valid number for student ID")
+        return
+
+    cid = input("Enter student course ID to enrol: ").strip()
+    if not cid.isdigit():
+        print("Please enter valid course ID")
+        return
+
+    student_not_found = True
+    course_not_found = True
+    try:
+        with open("student.txt", "r") as student_file:
+            for line in student_file:
+                if sid == line.strip().split(",")[0]:
+                    student_not_found = False
+                    break
+    except FileNotFoundError:
+        pass
+    finally:
+        if student_not_found:
+            print("Student is not registered")
+            return
+
+    course_id_seats_left = 0
+    try:
+        with open("course.txt", "r") as course_file:
+            for line in course_file:
+                course_id, _, max_seats = line.split(",")
+                if cid == course_id:
+                    course_not_found = True
+                    course_id_seats_left = max_seats
+                    break
+    except FileNotFoundError:
+        pass
+    finally:
+        if course_not_found:
+            print("Course is not available")
+            return
+
+    with open("enrollments.txt", "r") as enrollment_file:
+        for line in enrollment_file.readlines():
+            enrolment_sid, enrolment_cid, enrolment_date = line.split(",")
+            if sid == enrolment_sid and cid == enrolment_cid:
+                print(f"Student ID: {sid} has already enrolled in course ID: {cid} on the {enrolment_date}")
+                break
+            if cid == enrolment_cid:
+                course_id_seats_left -= 1
+
+    # check if seats available
+    if course_id_seats_left == 0:
+        print(f"Unable to enrol student in course ID: {cid} as there is no seats left")
+        return
+
+    # add student into enrollments if all conditions is satisfied
+    with open("enrollments.txt", "a") as enrollment_file:
+        enrolment_date = datetime.today().strftime("%d-%m-%Y")
+        enrollment_file.write(f"{sid},{cid},{enrolment_date}\n")
+        print(f"Student ID: {sid} has succesfully enrolled in course ID: {cid} on the {enrolment_date}\n")
+
+
+def drop_course():
+    # TODO: input for student id
+
+    # TODO: read enrollment file and find sid if exist
+    saved_enrollments = []
+    enrollment_not_found = True
+    try:
+        with open("enrollments.txt", "r") as enrollment_file:
+            for line in enrollment_file.readlines():
+                enrolment_sid = line.split(",")[0]
+                if sid == enrolment_sid:
+                    # exist case handle print
+                    sid = enrolment_sid
+                    enrollment_not_found = False
+                else:
+                    saved_enrollments.append(line)
+    except FileNotFoundError:
+        pass
+    finally:
+        if enrollment_not_found:
+            # TODO: write proper message with sid
+            print("No course to drop...")
+            return
+
+    # TODO: overwrite enrollment.txt if there is a drop course
+    with open("enrollment.txt", "w") as enrollment_file:
+        enrollment_file.writelines(saved_enrollments)
+
+    print("Successful message???")
 
 
 def view_courses():
@@ -74,10 +251,13 @@ def view_courses():
         with open("course.txt", "r") as courses:
             course_list = courses.readlines()
 
+        # TODO: read enrollment file and count seats taken
+        seats_taken = 0
+        ...
+        seats_taken += 1
         for line in course_list:
             cid, cname, max_seats = line.strip().split(",")
-            print(f"Course ID: {cid} | Course Name: {cname} | Max Seats: {max_seats}")
-
+            print(f"Course ID: {cid} | Course Name: {cname} | Remaining Seats: {max_seats - seats_taken}")
     except FileNotFoundError:
         print("No available course now.")
 
@@ -114,6 +294,8 @@ while True:
             add_course()
         case 3:
             enrol_course()
+        case 4:
+            drop_course()
         case 5:
             view_courses()
         case 6:

@@ -1,2 +1,2 @@
-
-234234,ok,20
+csc1024,computer science,28
+msm,malaysia,19
