@@ -1,1 +1,2 @@
-Course ID: csc1024 | Course Name: ok | Max Seats: 20
+
+234234,ok,20
