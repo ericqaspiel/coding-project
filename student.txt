@@ -1,3 +1,2 @@
-24125304,eric,eric@gmail.com,1231230,1//1
-24011111,jos,emaisdlf123@,1231230,1/1/11
-2423412,okok,121230
+12345678,eric sia sze pin,0123456789,sunway@imail.com.edu.my
+24125304,eric,10123,eric

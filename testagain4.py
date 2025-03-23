@@ -1,30 +1,28 @@
 from datetime import datetime
 
 
-def add_student():  # this is to add students information to the student file
-    length = 8
-    # Getting input from users for student ID if is not digit will print error
-    sid = input("Student ID(e.g. 25xxxxxx): ").strip()
-    if not sid.isdigit() or len(sid) < length:
-        print("\nPlease enter a valid 8-digit number for Student ID(e.g. 25xxxxxx).\n")
+def add_student():
+    # Getting input from user for student ID if is not digit will print error
+    sid = input("Student ID: ").strip()
+    if not sid.isdigit():
+        print("Please enter a valid number for Student ID.")
         return
 
-    # Getting input from users for student name and if empty will print error
+    # Getting input from user for student name if empty will print error
     sname = input("Student Name: ").strip()
     if not sname:
-        print("\nStudent Name cannot be empty.\n")
+        print("Student Name cannot be empty.")
         return
 
-    # Getting input from users for phone number and if is not digit will print error
-    phone_num = input("Phone number(e.g. 0123456789): ").strip()
+    # getting input from user for phone number and if user enter anything beside integer then will show error
+    phone_num = input("Phone number: ").strip()
     if not phone_num.isdigit():
-        print("\nPlease enter a valid number for phone number(e.g. 0123456789)\n")
+        print("Please enter a valid number for phone number")
         return
 
-    # Getting input from users for email address and if empty will print error
-    email_info = input("Email Address(e.g. example@email.com): ").strip()
+    email_info = input("Email Address: ").strip()
     if not email_info:
-        print("\nPlease enter a valid email adress(e.g. example@email.com)\n")
+        print("Please enter a valid email address")
         return
 
     # Checking if student already exist or not
@@ -36,31 +34,30 @@ def add_student():  # this is to add students information to the student file
                     return
     except FileNotFoundError:
         print("No existing student file found. A new one will be created.")
-        # this is to tell if file not created/found, tell the user newfile has created
 
     # Write new student details into student.txt
     with open("student.txt", "a") as students_file:
         students_file.write(f"{sid},{sname},{phone_num},{email_info}\n")
-        print(f"\nStudent ID: {sid} | Student Name: {sname} added successfully!\n")
+        print()
+        print(f"Student ID: {sid} | Student Name: {sname} added successfully!\n")
 
 
-def add_course():  # this is to add courses information to course file
-    # Getting input from user for course id
-    cid = input("Course ID(e.g. CSC1024): ").strip().upper()
+def add_course():
+    # Getting input from user for course id & course name
+    cid = input("Course ID: ").strip().upper()
     if not cid:
-        print("\nPlease enter the valid Course ID(e.g. CSC1024)\n")
+        print("Please enter the valid Course ID")
         return
 
-    # Getting input from user for course name
-    cname = input("Course name(e.g. Computer Science): ").strip()
+    cname = input("Course name: ").strip()
     if not cname:
-        print("\nPlease enter the valid course Name(e.g. Computer Science)\n")
+        print("Please enter the valid course Name")
         return
 
     # Getting input from user for max seats and if user enter anything beside integer then will show error
-    max_seats = input("Maximum seats for the course: ").strip()
+    max_seats = input("Max seats: ").strip()
     if not max_seats.isdigit():
-        print("\nPlease enter a valid number for maximum seats.\n")
+        print("Please enter a valid number for seats.")
         return
 
     # This to check if courses existed and file not created.
@@ -71,25 +68,25 @@ def add_course():  # this is to add courses information to course file
                     print("Course already exist!")
                     return
     except FileNotFoundError:
-        print("No existing course file found, A new one will be created.")
+        print("New file for course has created!")
     # this is check if file not created/found, tell the user new file has created
 
     # This to append the information from user to the file
     with open("course.txt", "a") as course_file:
         course_file.write(f"{cid},{cname},{max_seats}\n")
-        print(f"\n(Course ID: {cid}) (Course Name: {cname}) (Max Seats: {max_seats}) added successfully!\n")
+        print()
+        print(f"(Course ID: {cid}) (Course Name: {cname}) (Max Seats: {max_seats}) added successfully!\n")
 
 
-def enrol_course():  # this is to enrol students to the course
-    # This is to get input from users for student ID to enroll, if not digit will print error
-    sid = input("Enter student ID to enrol(e.g. 25xxxxxx): ").strip()
+def enrol_course():
+    sid = input("Enter student ID to enrol: ").strip()
     if not sid.isdigit():
-        print("\nPlease enter a valid number for student ID(e.g. 25xxxxxx)\n")
+        print("Please enter a valid number for student ID")
         return
-    # This is to get input from users for student to enroll on which course, if empty will print error
-    cid = input("Enter student course ID to enrol(e.g. CSC1024): ").strip().upper()
+
+    cid = input("Enter student course ID to enrol: ").strip().upper()
     if not cid:
-        print("\nPlease enter a valid course ID(e.g. CSC1024)\n")
+        print("Please enter a valid course ID")
         return
 
     student_found = False
@@ -108,9 +105,8 @@ def enrol_course():  # this is to enrol students to the course
     except FileNotFoundError:
         pass
 
-    # Check if student not found den tell user student not registered
     if not student_found:
-        print("\nStudent is not registered\n")
+        print("Student is not registered")
         return
 
     # Read courses and check if course exists
@@ -126,7 +122,7 @@ def enrol_course():  # this is to enrol students to the course
         pass
 
     if not course_found:
-        print("\nCourse is not available\n")
+        print("Course is not available")
         return
 
     # Count students already enrolled in the course & check for duplicate enrollment
@@ -141,46 +137,46 @@ def enrol_course():  # this is to enrol students to the course
                     if enrolment_sid == sid and enrolment_cid == cid:
                         already_enrolled = True  # Student is already in this course
                 except ValueError:
-                    continue
+                    continue  # Skip malformed lines
     except FileNotFoundError:
         pass
 
-    # Check if student is already enrolled in the course
+    # **Check if student is already enrolled in the course**
     if already_enrolled:
-        print(f"\nStudent ID: {sid} is already enrolled in Course ID: {cid}.\n")
+        print(f"Student ID: {sid} is already enrolled in Course ID: {cid}.")
         return
 
-    # Check if seats are available
+    # **Check if seats are available**
     available_seats = course_id_seats_left - enrolled_count
     if available_seats <= 0:
-        print(f"\nUnable to enrol student in Course ID: {cid} as there are no seats left.\n")
+        print(f"Unable to enrol student in Course ID: {cid} as there are no seats left.")
         return
 
-    # Add student into enrollments
+    # **Add student into enrollments**
     with open("enrollments.txt", "a") as enrollment_file:
         enrolment_date = datetime.today().strftime("%d-%m-%Y")
         enrollment_file.write(f"{sid},{cid},{enrolment_date}\n")
 
-    # Update course.txt to reflect new seat count
+    # **Update course.txt to reflect new seat count**
     with open("course.txt", "w") as course_file:
         for course in updated_courses:
             if course[0] == cid:  # Update the seats for enrolled course
                 course[2] -= 1
             course_file.write(f"{course[0]},{course[1]},{course[2]}\n")
 
-    print(f"\nStudent ID: {sid} has successfully enrolled in Course ID: {cid} on {enrolment_date}.\n")
+    print(f"Student ID: {sid} has successfully enrolled in Course ID: {cid} on {enrolment_date}.")
 
 
-def drop_course():  # this is to drop student's course
-    # getting input from users to drop student's course
+def drop_course():
+
     sid = input("Enter student ID to drop a course: ").strip()
     if not sid.isdigit():
-        print("\nPlease enter a valid student ID\n")
+        print("Please enter a valid student ID")
         return
-    # getting input from users to drop student's course id
+
     cid = input("Enter course ID to drop: ").strip().upper()
     if not cid:
-        print("\nPlease enter a valid course ID\n")
+        print("Please enter a valid course ID")
         return
 
     student_found = False
@@ -189,7 +185,7 @@ def drop_course():  # this is to drop student's course
     saved_enrollments = []
     updated_courses = []
 
-    # Check if student exists
+    # **Check if student exists**
     try:
         with open("student.txt", "r") as student_file:
             for line in student_file:
@@ -199,12 +195,11 @@ def drop_course():  # this is to drop student's course
     except FileNotFoundError:
         pass
 
-    # if not found den return
     if not student_found:
-        print(f"\nStudent ID: {sid} not found. Please register first.\n")
+        print(f"Student ID: {sid} not found. Please register first.")
         return
 
-    # Check if course exists
+    # **Check if course exists**
     try:
         with open("course.txt", "r") as course_file:
             for line in course_file:
@@ -214,12 +209,12 @@ def drop_course():  # this is to drop student's course
                 updated_courses.append([course_id, cname, int(max_seats)])  # Store all course data
     except FileNotFoundError:
         pass
-    # if not found den return
+
     if not course_found:
-        print(f"\nCourse ID: {cid} not found. Please enter a valid course.\n")
+        print(f"Course ID: {cid} not found. Please enter a valid course.")
         return
 
-    # Check if enrollment exists & remove it
+    # **Check if enrollment exists & remove it**
     try:
         with open("enrollments.txt", "r") as enrollment_file:
             for line in enrollment_file:
@@ -237,7 +232,7 @@ def drop_course():  # this is to drop student's course
         pass
 
     if not enrollment_found:
-        print(f"\nStudent ID: {sid} is not enrolled in Course ID: {cid}. No course to drop.\n")
+        print(f"Student ID: {sid} is not enrolled in Course ID: {cid}. No course to drop.")
         return
 
     # **Write updated enrollments back to the file**
@@ -251,10 +246,10 @@ def drop_course():  # this is to drop student's course
                 course[2] += 1
             course_file.write(f"{course[0]},{course[1]},{course[2]}\n")
 
-    print(f"\nStudent ID: {sid} has successfully dropped Course ID: {cid}. Seat has been returned.\n")
+    print(f"Student ID: {sid} has successfully dropped Course ID: {cid}. Seat has been returned.")
 
 
-def view_courses():  # This is to provide user to view courses that are available
+def view_courses():
     try:
         # Read all course details
         with open("course.txt", "r") as courses:
@@ -277,14 +272,13 @@ def view_courses():  # This is to provide user to view courses that are availabl
 
             # Calculate remaining seats
             remaining_seats = int(max_seats) - seats_taken
-            print(f"\nCourse ID: {cid} | Course Name: {cname} | Remaining Seats: {remaining_seats}\n")
+            print(f"Course ID: {cid} | Course Name: {cname} | Remaining Seats: {remaining_seats}")
 
     except FileNotFoundError:
-        print("\nNo available course now.\n")
-        # If no file means no course
+        print("No available course now.")
 
 
-def view_students():  # This is to provide users to view students list
+def view_students():
     try:
         with open("student.txt", "r") as students:
             students_list = students.readlines()
@@ -292,50 +286,46 @@ def view_students():  # This is to provide users to view students list
         for line in students_list:
             sid, sname, phone_num, email_info = line.strip().split(",")
             print(
-                f"\nStudent ID: {sid} | Student Name: {sname} | Phone Number: {phone_num} | Email Address: {email_info}\n"
+                f"Student ID: {sid} | Student Name: {sname} | Phone Number: {phone_num} | Email Address: {email_info}"
             )
 
     except FileNotFoundError:
         print("No existing student now.")
 
 
-def main_program():  # This is to show the main menu and provide selection for users
-    while True:
-        print("=============================================")
-        print("Sunway Course Registration System")
-        print("Enter [1] To add a new student")
-        print("Enter [2] To add a new course")
-        print("Enter [3] To enrol in a course")
-        print("Enter [4] To drop a course")
-        print("Enter [5] To view available courses")
-        print("Enter [6] To view student informations")
-        print("Enter [7] To exit")
+while True:
+    print("=============================================")
+    print("Sunway Course Registration System")
+    print("Enter [1] To add a new student")
+    print("Enter [2] To add a new course")
+    print("Enter [3] To enrol in a course")
+    print("Enter [4] To drop a course")
+    print("Enter [5] to view available courses")
+    print("Enter [6] To view student informations")
+    print("Enter [7] to exit")
 
-        try:
-            selection = int(input("Enter your selection here: "))  # users selection
-        except ValueError:
-            print("\nInvalid input! Please enter a number between 1 to 7.")
-            input("Press Enter to continue...")  # Adds a small pause
-            continue
+    try:
+        selection = int(input("Enter your selection here: "))
+    except ValueError:
+        print("\nInvalid input! Please enter a number between 1 to 7.")
+        input("Press Enter to continue...")  # Adds a small pause
+        continue
 
-        match selection:
-            case 1:
-                add_student()
-            case 2:
-                add_course()
-            case 3:
-                enrol_course()
-            case 4:
-                drop_course()
-            case 5:
-                view_courses()
-            case 6:
-                view_students()
-            case 7:
-                print("Exiting the program. SEE YOU AGAIN!")
-                break
-            case _:
-                print("Invalid selection, please choose between 0 to 7")
-
-
-main_program()
+    match selection:
+        case 1:
+            add_student()
+        case 2:
+            add_course()
+        case 3:
+            enrol_course()
+        case 4:
+            drop_course()
+        case 5:
+            view_courses()
+        case 6:
+            view_students()
+        case 7:
+            print("Exiting the program. SEE YOU AGAIN!")
+            break
+        case _:
+            print("Invalid selection, please choose between 0 to 7")

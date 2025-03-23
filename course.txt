@@ -1,2 +1,1 @@
-csc1024,computer science,28
-msm,malaysia,19
+CSC1024,computer science,20
